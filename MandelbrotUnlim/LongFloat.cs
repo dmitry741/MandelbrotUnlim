@@ -78,7 +78,7 @@ namespace MandelbrotUnlim
 
             if (realDigits >= cDivDigits)
             {
-                int count = 0;
+                int count;
                 int maxCount = 0;
 
                 int i = start;
@@ -118,7 +118,7 @@ namespace MandelbrotUnlim
                     } while (count != maxCount);
 
                     int startIndex = digits[0] + i + 1;
-                    digits.RemoveRange(startIndex, digits.Count - startIndex);
+                    digits.RemoveRange(startIndex, digits.Count - startIndex + 1);
                     digits[i]++;
                 }
             }
