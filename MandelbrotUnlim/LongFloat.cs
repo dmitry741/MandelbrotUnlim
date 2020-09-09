@@ -123,5 +123,25 @@ namespace MandelbrotUnlim
                 }
             }
         }
+
+        public LongFloat(string s)
+        {
+            InitFromString(s);
+        }
+
+        public LongFloat(double d)
+        {
+            InitFromString(d.ToString());
+        }
+
+        public static LongFloat FromString(string s)
+        {
+            return new LongFloat(s);
+        }
+
+        public static LongFloat FromDouble(double d)
+        {
+            return new LongFloat(d);
+        }
     }
 }
