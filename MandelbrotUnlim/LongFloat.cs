@@ -395,5 +395,54 @@ namespace MandelbrotUnlim
             return a < b || a == b;
         }
 
+        public override string ToString()
+        {
+            string result = string.Empty;
+
+            if (sign == -1)
+                result += "-";
+
+            if (exponent > 0)
+            {
+                int i = 0;
+                int exp = exponent;
+
+                while (i < digits.Count && i < exp)
+                    result += digits[i++];
+
+                while (i < exp)
+                {
+                    result += "0";
+                    i++;
+                }
+
+                if (i < digits.Count)
+                {
+                    result += ".";
+
+                    while (i < digits.Count)
+                        result += digits[i++];
+                }
+            }
+            else if (exponent == 0)
+            {
+                result += "0.";
+
+                for (int i = 0; i < digits.Count; i++)
+                    result += digits[i];
+            }
+            else
+            {
+                result += "0.";
+
+                for (int i = 0; i < -exponent; i++)
+                    result += "0";
+
+                for (int i = 0; i < digits.Count; i++)
+                    result += digits[i];
+            }
+
+            return result;
+        }
     }
 }
