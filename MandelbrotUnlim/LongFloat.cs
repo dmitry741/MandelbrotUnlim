@@ -9,13 +9,25 @@ namespace MandelbrotUnlim
     /// <summary>
     /// Класс реализующий длинную вещественную арифметику.
     /// </summary>
+#pragma warning disable CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
+#pragma warning disable CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
     class LongFloat
+#pragma warning restore CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
+#pragma warning restore CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
     {
         int sign;
         List<int> digits;
         int exponent;
 
         bool IsZero => digits.Count == 1 && digits[0] == 0;
+
+        private static List<int> ListDeepCopy(List<int> digits)
+        {
+            int[] digs = new int[digits.Count];
+            digits.CopyTo(digs);
+
+            return new List<int>(digs);
+        }
 
         private void InitFromString(string s)
         {
@@ -151,21 +163,17 @@ namespace MandelbrotUnlim
             return new LongFloat(d);
         }
 
-        public static LongFloat operator-(LongFloat a) 
+        public static LongFloat operator -(LongFloat a) 
         {
-            LongFloat result = new LongFloat();
-
-            int[] digs = new int[a.digits.Count];
-            a.digits.CopyTo(digs);
-
-            result.digits = new List<int>(digs);
-            result.exponent = a.exponent;
-            result.sign = -a.sign;
-
-	        return result;
+            return new LongFloat
+            {
+                digits = ListDeepCopy(a.digits),
+                exponent = a.exponent,
+                sign = -a.sign
+            };
         }
 
-        public static LongFloat operator+(LongFloat a, LongFloat b)
+        public static LongFloat operator +(LongFloat a, LongFloat b)
         {
             if (a.sign == b.sign)
             {
@@ -229,48 +237,52 @@ namespace MandelbrotUnlim
 
         public static LongFloat operator -(LongFloat a, LongFloat b)
         {
-            /*if (a.sign == 1 && b.sign == 1)
+            if (a.sign == 1 && b.sign == 1)
             {
-                bool cmp = *this > x;
+                bool cmp = a > b;
 
-                long exp1 = cmp ? a.exponent : b.exponent;
-                long exp2 = cmp ? b.exponent : a.exponent;
-                long exp = Math.Max(exp1, exp2);
+                int exp1 = cmp ? a.exponent : b.exponent;
+                int exp2 = cmp ? b.exponent : a.exponent;
+                int exp = Math.Max(exp1, exp2);
 
-                vector<int> d1(cmp? digits : x.digits);
-                vector<int> d2(cmp? x.digits : digits);
+                List<int> d1 = ListDeepCopy(cmp ? a.digits : b.digits);
+                List<int> d2 = ListDeepCopy(cmp ? b.digits : a.digits);
 
                 while (exp1 != exp)
                 {
-                    d1.insert(d1.begin(), 0);
+                    d1.Insert(0, 0);
                     exp1++;
                 }
 
                 while (exp2 != exp)
                 {
-                    d2.insert(d2.begin(), 0);
+                    d2.Insert(0, 0);
                     exp2++;
                 }
 
-                int size = max(d1.size(), d2.size());
+                int size = Math.Max(d1.Count, d2.Count);
 
-                while (d1.size() != size)
-                    d1.push_back(0);
+                while (d1.Count != size)
+                    d1.Add(0);
 
-                while (d2.size() != size)
-                    d2.push_back(0);
+                while (d2.Count != size)
+                    d2.Add(0);
 
                 int len = 1 + size;
 
-                LongFloat res = new LongFloat();
+                int[] zeros = new int[len];
+                Array.Clear(zeros, 0, len);
 
-                res.sign = cmp ? 1 : -1;
-                res.digits = vector<int>(len, 0);
+                LongFloat res = new LongFloat
+                {
+                    sign = cmp ? 1 : -1,
+                    digits = new List<int>(zeros)
+                };
 
-                for (size_t i = 0; i < size; i++)
+                for (int i = 0; i < size; i++)
                     res.digits[i + 1] = d1[i] - d2[i];
 
-                for (size_t i = len - 1; i > 0; i--)
+                for (int i = len - 1; i > 0; i--)
                 {
                     if (res.digits[i] < 0)
                     {
@@ -280,17 +292,108 @@ namespace MandelbrotUnlim
                 }
 
                 res.exponent = exp + 1;
-                res.removeZeroes();
+                res.RemoveZeroes();
 
                 return res;
             }
 
-            if (sign == -1 && x.sign == -1)
-                return (-x) - (-(*this));
+            if (a.sign == -1 && b.sign == -1)
+                return (-b) - (-a);
 
-            return *this + (-x);*/
-
-            return null;
+            return a + (-b);
         }
+
+        public static LongFloat operator *(LongFloat a, LongFloat b)
+        {
+            int len = a.digits.Count + b.digits.Count;
+            int[] zeros = new int[len];
+            Array.Clear(zeros, 0, len);
+
+            LongFloat res = new LongFloat
+            {
+                sign = a.sign * b.sign,
+                exponent = a.exponent + b.exponent,
+                digits = new List<int>(zeros)
+            };
+
+            for (int i = 0; i < a.digits.Count; i++)
+                for (int j = 0; j < b.digits.Count; j++)
+                    res.digits[i + j + 1] += a.digits[i] * b.digits[j];
+
+            for (int i = len - 1; i > 0; i--)
+            {
+                res.digits[i - 1] += res.digits[i] / 10;
+                res.digits[i] %= 10;
+            }
+
+            res.RemoveZeroes();
+
+            return res;
+        }
+
+        public static bool operator >(LongFloat a, LongFloat b)
+        {
+            if (a.sign != b.sign)
+                return a.sign > b.sign;
+
+            if (a.exponent != b.exponent)
+                return (a.exponent > b.exponent) ^ (a.sign == -1);
+
+            List<int> d1 = ListDeepCopy(a.digits);
+            List<int> d2 = ListDeepCopy(b.digits);
+
+            int size = Math.Max(d1.Count, d2.Count);
+
+            while (d1.Count != size)
+                d1.Add(0);
+
+            while (d2.Count != size)
+                d2.Add(0);
+
+            for (int i = 0; i < size; i++)
+                if (d1[i] != d2[i])
+                    return (d1[i] > d2[i]) ^ (a.sign == -1);
+
+            return false;
+        }
+
+        public static bool operator <(LongFloat a, LongFloat b)
+        {
+            return !(a > b || a == b);
+        }
+
+        public static bool operator ==(LongFloat a, LongFloat b)
+        {
+            if (a.sign != b.sign)
+                return false;
+
+            if (a.exponent != b.exponent)
+                return false;
+
+            if (a.digits.Count != b.digits.Count)
+                return false;
+
+            for (int i = 0; i < a.digits.Count; i++)
+                if (a.digits[i] != b.digits[i])
+                    return false;
+
+            return true;
+        }
+
+        public static bool operator !=(LongFloat a, LongFloat b)
+        {
+            return !(a == b);
+        }
+
+        public static bool operator >=(LongFloat a, LongFloat b)
+        {
+            return a > b || a == b;
+        }
+
+        public static bool operator <=(LongFloat a, LongFloat b)
+        {
+            return a < b || a == b;
+        }
+
     }
 }
