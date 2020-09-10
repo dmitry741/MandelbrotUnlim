@@ -1,22 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MandelbrotUnlim
+namespace LongFloatLib
 {
     /// <summary>
     /// Класс реализующий длинную вещественную арифметику.
     /// </summary>
 #pragma warning disable CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
 #pragma warning disable CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
-    class LongFloat
+    public class LongFloat
 #pragma warning restore CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
 #pragma warning restore CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
     {
         int sign;
-        List<int> digits;
+        List<int> digits = new List<int>();
         int exponent;
 
         bool IsZero => digits.Count == 1 && digits[0] == 0;
@@ -48,7 +45,7 @@ namespace MandelbrotUnlim
 
             while (index < s.Length)
             {
-                if (s[index] == '.')
+                if (s[index] == ',')
                     exponent = sign == 1 ? index : index - 1;
                 else
                     digits.Add(s[index] - '0');
@@ -138,9 +135,9 @@ namespace MandelbrotUnlim
 
         public LongFloat()
         {
-	        sign = 1;
+            sign = 1;
             digits = new List<int> { 0 };
-	        exponent = 1;
+            exponent = 1;
         }
 
         public LongFloat(string s)
@@ -163,7 +160,7 @@ namespace MandelbrotUnlim
             return new LongFloat(d);
         }
 
-        public static LongFloat operator -(LongFloat a) 
+        public static LongFloat operator -(LongFloat a)
         {
             return new LongFloat
             {
@@ -206,7 +203,7 @@ namespace MandelbrotUnlim
 
                 int len = 1 + size;
 
-                LongFloat res = new LongFloat();                
+                LongFloat res = new LongFloat();
 
                 int[] zeros = new int[len];
                 Array.Clear(zeros, 0, len);
@@ -418,7 +415,7 @@ namespace MandelbrotUnlim
 
                 if (i < digits.Count)
                 {
-                    result += ".";
+                    result += ",";
 
                     while (i < digits.Count)
                         result += digits[i++];
@@ -426,14 +423,14 @@ namespace MandelbrotUnlim
             }
             else if (exponent == 0)
             {
-                result += "0.";
+                result += "0,";
 
                 for (int i = 0; i < digits.Count; i++)
                     result += digits[i];
             }
             else
             {
-                result += "0.";
+                result += "0,";
 
                 for (int i = 0; i < -exponent; i++)
                     result += "0";

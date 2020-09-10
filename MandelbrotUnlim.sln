@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.30309.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MandelbrotUnlim", "MandelbrotUnlim\MandelbrotUnlim.csproj", "{79B8D366-91F6-4ED9-B735-43173833573D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LongFloatTestApp", "LongFloatTestApp\LongFloatTestApp.csproj", "{A2DA5FFE-1723-4E3D-B35A-94F285860E03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LongFloatLib", "LongFloatLib\LongFloatLib.csproj", "{124628E5-D2B0-40C3-A537-EB67B5D5EEDA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{79B8D366-91F6-4ED9-B735-43173833573D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79B8D366-91F6-4ED9-B735-43173833573D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79B8D366-91F6-4ED9-B735-43173833573D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2DA5FFE-1723-4E3D-B35A-94F285860E03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2DA5FFE-1723-4E3D-B35A-94F285860E03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2DA5FFE-1723-4E3D-B35A-94F285860E03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2DA5FFE-1723-4E3D-B35A-94F285860E03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{124628E5-D2B0-40C3-A537-EB67B5D5EEDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{124628E5-D2B0-40C3-A537-EB67B5D5EEDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{124628E5-D2B0-40C3-A537-EB67B5D5EEDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{124628E5-D2B0-40C3-A537-EB67B5D5EEDA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
