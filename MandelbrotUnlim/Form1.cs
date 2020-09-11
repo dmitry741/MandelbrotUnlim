@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using LongFloatLib;
 
 namespace MandelbrotUnlim
 {
@@ -19,15 +20,13 @@ namespace MandelbrotUnlim
         private byte[] _rgbValues = null;
         private Palette _colors = null;
 
-        private const double cStep = 10;
+        private LongFloat _xmin = LongFloat.FromDouble(-1.75);
+        private LongFloat _xmax = LongFloat.FromDouble(1.75);
+        private LongFloat _ymin = LongFloat.FromDouble(-1.75);
+        private LongFloat _ymax = LongFloat.FromDouble(-1.75);
 
-        private const double cXmin = -1.75;
-        private const double cXmax = 1.75;
-        private const double cYmin = -1.75;
-        private const double cYmax = 1.75;
-
-        private int _zoom = 0;
         private int _timeSpan;
+        AbstractDynamicFractal _fractal = new MandelbrotFractal();
 
         #endregion
 
@@ -59,7 +58,7 @@ namespace MandelbrotUnlim
 
         Bitmap GetFractal()
         {
-            /*Rectangle rect = new Rectangle(0, 0, _bitmap.Width, _bitmap.Height);
+            Rectangle rect = new Rectangle(0, 0, _bitmap.Width, _bitmap.Height);
             System.Drawing.Imaging.BitmapData bmpData = _bitmap.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
 
             int stride = bmpData.Stride;
@@ -75,10 +74,10 @@ namespace MandelbrotUnlim
                 Ymax = _ymax
             };
 
-            _timeSpan = fbi.GetBitmap(Fractal, _colors.Colors, stride, _rgbValues);
+            _timeSpan = fbi.GetBitmap(_fractal, _colors.Colors, stride, _rgbValues);
 
             System.Runtime.InteropServices.Marshal.Copy(_rgbValues, 0, bmpData.Scan0, bytes);
-            _bitmap.UnlockBits(bmpData);*/
+            _bitmap.UnlockBits(bmpData);
 
             return _bitmap;
         }
@@ -88,32 +87,6 @@ namespace MandelbrotUnlim
             pictureBox1.Image = GetFractal();
             lblElapsedTime.Text = string.Format("Время построения: {0} мс", _timeSpan);
         }
-
-        /*AbstractDynamicFractal Fractal
-        {
-            get
-            {
-                AbstractDynamicFractal fractal;
-
-                if (cmbFractal.SelectedIndex == 0)
-                {
-                    var a = 2.0 / (trackBar1.Maximum - trackBar1.Minimum) * (trackBar1.Value - trackBar1.Minimum) - 1;
-                    var b = 2.0 / (trackBar2.Maximum - trackBar2.Minimum) * (trackBar2.Value - trackBar2.Minimum) - 1;
-
-                    fractal = new JuliaFractal(new Complex(a, b));
-                }
-                else if (cmbFractal.SelectedIndex == 1)
-                {
-                    fractal = new MandelbrotFractal();
-                }
-                else
-                {
-                    fractal = new NewtonFractal((int)cmbRoots.Items[cmbRoots.SelectedIndex]);
-                }
-
-                return fractal;
-            }
-        }*/
 
         #endregion
 
@@ -142,6 +115,16 @@ namespace MandelbrotUnlim
                 _rgbValues = new byte[bytes];
                 _bitmap.UnlockBits(bmpData);
             }
+
+            UpdateFractal();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            _xmin = LongFloat.FromDouble(-1.75);
+            _xmax = LongFloat.FromDouble(1.75);
+            _ymin = LongFloat.FromDouble(-1.75);
+            _ymax = LongFloat.FromDouble(-1.75);
 
             UpdateFractal();
         }
