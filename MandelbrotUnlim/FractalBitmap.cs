@@ -45,9 +45,10 @@ namespace MandelbrotUnlim
 
             for (int x = 0; x < width; x++)
             {
+                LongFloat xlf = kx * LongFloat.FromDouble(Convert.ToDouble(x)) + xmin;
+
                 for (int y = start; y <= stop; y++)
                 {
-                    LongFloat xlf = kx * LongFloat.FromDouble(Convert.ToDouble(x)) + xmin;
                     LongFloat ylf = ky * LongFloat.FromDouble(Convert.ToDouble(y)) + ymax;
                     fractal.Start = new Complex(xlf, ylf);
                     int index = fractal.GetIteration();
@@ -75,13 +76,13 @@ namespace MandelbrotUnlim
             {
                 Task.Run(() => FillArray(Xmin, Xmax, Ymin, Ymax, BitmapWidth, BitmapHeight, fractal.Copy(),
                      0,
-                     BitmapHeight / 2,
-                    rgbValues, colors, stride)),
+                     BitmapHeight - 1,
+                    rgbValues, colors, stride)
 
-                Task.Run(() => FillArray(Xmin, Xmax, Ymin, Ymax, BitmapWidth, BitmapHeight, fractal.Copy(),
+                /*Task.Run(() => FillArray(Xmin, Xmax, Ymin, Ymax, BitmapWidth, BitmapHeight, fractal.Copy(),
                     BitmapHeight / 2 + 1,
                     BitmapHeight - 1,
-                    rgbValues, colors, stride))
+                    rgbValues, colors, stride)*/)
             };
 
             Task.WaitAll(tasks.ToArray());

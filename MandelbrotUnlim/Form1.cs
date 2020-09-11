@@ -23,7 +23,7 @@ namespace MandelbrotUnlim
         private LongFloat _xmin = LongFloat.FromDouble(-1.75);
         private LongFloat _xmax = LongFloat.FromDouble(1.75);
         private LongFloat _ymin = LongFloat.FromDouble(-1.75);
-        private LongFloat _ymax = LongFloat.FromDouble(-1.75);
+        private LongFloat _ymax = LongFloat.FromDouble(1.75);
 
         private int _timeSpan;
         AbstractDynamicFractal _fractal = new MandelbrotFractal();
@@ -116,6 +116,8 @@ namespace MandelbrotUnlim
                 _bitmap.UnlockBits(bmpData);
             }
 
+            _colors = CreateColdPalette();
+
             UpdateFractal();
         }
 
@@ -124,7 +126,7 @@ namespace MandelbrotUnlim
             _xmin = LongFloat.FromDouble(-1.75);
             _xmax = LongFloat.FromDouble(1.75);
             _ymin = LongFloat.FromDouble(-1.75);
-            _ymax = LongFloat.FromDouble(-1.75);
+            _ymax = LongFloat.FromDouble(1.75);
 
             UpdateFractal();
         }
