@@ -54,6 +54,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="FractalBitmap.cs" />
     <Compile Include="MandelbrotFractal.cs" />
     <Compile Include="Palette.cs" />
     <Compile Include="Program.cs" />
