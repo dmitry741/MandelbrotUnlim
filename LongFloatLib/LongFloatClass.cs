@@ -12,11 +12,17 @@ namespace LongFloatLib
 #pragma warning restore CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
 #pragma warning restore CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
     {
-        int sign;
-        List<int> digits = new List<int>();
-        int exponent;
+        #region === members ===
 
-        bool IsZero => digits.Count == 1 && digits[0] == 0;
+        int _sign;
+        List<int> _digits = new List<int>();
+        int _exponent;
+
+        #endregion
+
+        #region === private ===
+
+        private bool IsZero => _digits.Count == 1 && _digits[0] == 0;
 
         private static List<int> ListDeepCopy(List<int> digits)
         {
@@ -28,27 +34,28 @@ namespace LongFloatLib
 
         private void InitFromString(string s)
         {
+            var nf = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat;
             int index;
 
             if (s[0] == '-')
             {
-                sign = -1;
+                _sign = -1;
                 index = 1;
             }
             else
             {
-                sign = 1;
+                _sign = 1;
                 index = 0;
             }
 
-            exponent = s.Length - index;
+            _exponent = s.Length - index;
 
             while (index < s.Length)
             {
-                if (s[index] == ',')
-                    exponent = sign == 1 ? index : index - 1;
+                if (s[index] == nf.NumberDecimalSeparator[0])
+                    _exponent = _sign == 1 ? index : index - 1;
                 else
-                    digits.Add(s[index] - '0');
+                    _digits.Add(s[index] - '0');
 
                 index++;
             }
@@ -56,24 +63,24 @@ namespace LongFloatLib
 
         private void RemoveZeroes()
         {
-            int n = Math.Max(1, exponent);
+            int n = Math.Max(1, _exponent);
 
-            while (digits.Count > n && digits[digits.Count - 1] == 0)
-                digits.RemoveAt(digits.Count - 1);
+            while (_digits.Count > n && _digits[_digits.Count - 1] == 0)
+                _digits.RemoveAt(_digits.Count - 1);
 
-            while (digits.Count > 1 && digits[0] == 0)
+            while (_digits.Count > 1 && _digits[0] == 0)
             {
-                digits.RemoveAt(0);
-                exponent--;
+                _digits.RemoveAt(0);
+                _exponent--;
             }
 
-            while (digits.Count > n && digits[digits.Count - 1] == 0)
-                digits.RemoveAt(digits.Count - 1);
+            while (_digits.Count > n && _digits[_digits.Count - 1] == 0)
+                _digits.RemoveAt(_digits.Count - 1);
 
             if (IsZero)
             {
-                exponent = 1;
-                sign = 1;
+                _exponent = 1;
+                _sign = 1;
             }
 
             Normalize();
@@ -82,8 +89,8 @@ namespace LongFloatLib
         private void Normalize()
         {
             const int cDivDigits = 1000;
-            int start = Math.Max(exponent, 0);
-            int realDigits = digits.Count - start;
+            int start = Math.Max(_exponent, 0);
+            int realDigits = _digits.Count - start;
 
             if (realDigits >= cDivDigits)
             {
@@ -92,11 +99,11 @@ namespace LongFloatLib
 
                 int i = start;
 
-                while (i < digits.Count)
+                while (i < _digits.Count)
                 {
                     count = 0;
 
-                    while (i < digits.Count && digits[i] == 9)
+                    while (i < _digits.Count && _digits[i] == 9)
                     {
                         count++;
                         i++;
@@ -110,34 +117,38 @@ namespace LongFloatLib
 
                 if (maxCount > cDivDigits * 4 / 5)
                 {
-                    i = digits.Count - 1;
+                    i = _digits.Count - 1;
 
                     do
                     {
                         count = 0;
 
-                        while (i > 0 && digits[i] != 9)
+                        while (i > 0 && _digits[i] != 9)
                             i--;
 
-                        while (i > 0 && digits[i] == 9)
+                        while (i > 0 && _digits[i] == 9)
                         {
                             count++;
                             i--;
                         }
                     } while (count != maxCount);
 
-                    int startIndex = digits[0] + i + 1;
-                    digits.RemoveRange(startIndex, digits.Count - startIndex + 1);
-                    digits[i]++;
+                    int startIndex = _digits[0] + i + 1;
+                    _digits.RemoveRange(startIndex, _digits.Count - startIndex + 1);
+                    _digits[i]++;
                 }
             }
         }
 
+        #endregion
+
+        #region === constructors ===
+
         public LongFloat()
         {
-            sign = 1;
-            digits = new List<int> { 0 };
-            exponent = 1;
+            _sign = 1;
+            _digits = new List<int> { 0 };
+            _exponent = 0;
         }
 
         public LongFloat(string s)
@@ -160,26 +171,30 @@ namespace LongFloatLib
             return new LongFloat(d);
         }
 
+        #endregion
+
+        #region === ariphmetics ===
+
         public static LongFloat operator -(LongFloat a)
         {
             return new LongFloat
             {
-                digits = ListDeepCopy(a.digits),
-                exponent = a.exponent,
-                sign = -a.sign
+                _digits = ListDeepCopy(a._digits),
+                _exponent = a._exponent,
+                _sign = -a._sign
             };
         }
 
         public static LongFloat operator +(LongFloat a, LongFloat b)
         {
-            if (a.sign == b.sign)
+            if (a._sign == b._sign)
             {
-                int exp1 = a.exponent;
-                int exp2 = b.exponent;
+                int exp1 = a._exponent;
+                int exp2 = b._exponent;
                 int exp = Math.Max(exp1, exp2);
 
-                List<int> d1 = new List<int>(a.digits);
-                List<int> d2 = new List<int>(b.digits);
+                List<int> d1 = new List<int>(a._digits);
+                List<int> d2 = new List<int>(b._digits);
 
                 while (exp1 != exp)
                 {
@@ -202,31 +217,31 @@ namespace LongFloatLib
                     d2.Add(0);
 
                 int len = 1 + size;
-
-                LongFloat res = new LongFloat();
-
                 int[] zeros = new int[len];
                 Array.Clear(zeros, 0, len);
 
-                res.digits = new List<int>(zeros);
-                res.sign = a.sign;
+                LongFloat res = new LongFloat
+                {
+                    _digits = new List<int>(zeros),
+                    _sign = a._sign
+                };
 
                 for (int i = 0; i < size; i++)
-                    res.digits[i + 1] = d1[i] + d2[i];
+                    res._digits[i + 1] = d1[i] + d2[i];
 
                 for (int i = len - 1; i > 0; i--)
                 {
-                    res.digits[i - 1] += res.digits[i] / 10;
-                    res.digits[i] %= 10;
+                    res._digits[i - 1] += res._digits[i] / 10;
+                    res._digits[i] %= 10;
                 }
 
-                res.exponent = exp + 1;
+                res._exponent = exp + 1;
                 res.RemoveZeroes();
 
                 return res;
             }
 
-            if (a.sign == -1)
+            if (a._sign == -1)
                 return b - (-a);
 
             return a - (-b);
@@ -234,16 +249,16 @@ namespace LongFloatLib
 
         public static LongFloat operator -(LongFloat a, LongFloat b)
         {
-            if (a.sign == 1 && b.sign == 1)
+            if (a._sign == 1 && b._sign == 1)
             {
                 bool cmp = a > b;
 
-                int exp1 = cmp ? a.exponent : b.exponent;
-                int exp2 = cmp ? b.exponent : a.exponent;
+                int exp1 = cmp ? a._exponent : b._exponent;
+                int exp2 = cmp ? b._exponent : a._exponent;
                 int exp = Math.Max(exp1, exp2);
 
-                List<int> d1 = ListDeepCopy(cmp ? a.digits : b.digits);
-                List<int> d2 = ListDeepCopy(cmp ? b.digits : a.digits);
+                List<int> d1 = ListDeepCopy(cmp ? a._digits : b._digits);
+                List<int> d2 = ListDeepCopy(cmp ? b._digits : a._digits);
 
                 while (exp1 != exp)
                 {
@@ -272,29 +287,29 @@ namespace LongFloatLib
 
                 LongFloat res = new LongFloat
                 {
-                    sign = cmp ? 1 : -1,
-                    digits = new List<int>(zeros)
+                    _sign = cmp ? 1 : -1,
+                    _digits = new List<int>(zeros)
                 };
 
                 for (int i = 0; i < size; i++)
-                    res.digits[i + 1] = d1[i] - d2[i];
+                    res._digits[i + 1] = d1[i] - d2[i];
 
                 for (int i = len - 1; i > 0; i--)
                 {
-                    if (res.digits[i] < 0)
+                    if (res._digits[i] < 0)
                     {
-                        res.digits[i] += 10;
-                        res.digits[i - 1]--;
+                        res._digits[i] += 10;
+                        res._digits[i - 1]--;
                     }
                 }
 
-                res.exponent = exp + 1;
+                res._exponent = exp + 1;
                 res.RemoveZeroes();
 
                 return res;
             }
 
-            if (a.sign == -1 && b.sign == -1)
+            if (a._sign == -1 && b._sign == -1)
                 return (-b) - (-a);
 
             return a + (-b);
@@ -302,25 +317,25 @@ namespace LongFloatLib
 
         public static LongFloat operator *(LongFloat a, LongFloat b)
         {
-            int len = a.digits.Count + b.digits.Count;
+            int len = a._digits.Count + b._digits.Count;
             int[] zeros = new int[len];
             Array.Clear(zeros, 0, len);
 
             LongFloat res = new LongFloat
             {
-                sign = a.sign * b.sign,
-                exponent = a.exponent + b.exponent,
-                digits = new List<int>(zeros)
+                _sign = a._sign * b._sign,
+                _exponent = a._exponent + b._exponent,
+                _digits = new List<int>(zeros)
             };
 
-            for (int i = 0; i < a.digits.Count; i++)
-                for (int j = 0; j < b.digits.Count; j++)
-                    res.digits[i + j + 1] += a.digits[i] * b.digits[j];
+            for (int i = 0; i < a._digits.Count; i++)
+                for (int j = 0; j < b._digits.Count; j++)
+                    res._digits[i + j + 1] += a._digits[i] * b._digits[j];
 
             for (int i = len - 1; i > 0; i--)
             {
-                res.digits[i - 1] += res.digits[i] / 10;
-                res.digits[i] %= 10;
+                res._digits[i - 1] += res._digits[i] / 10;
+                res._digits[i] %= 10;
             }
 
             res.RemoveZeroes();
@@ -328,16 +343,20 @@ namespace LongFloatLib
             return res;
         }
 
+        #endregion
+
+        #region === comparing ===
+
         public static bool operator >(LongFloat a, LongFloat b)
         {
-            if (a.sign != b.sign)
-                return a.sign > b.sign;
+            if (a._sign != b._sign)
+                return a._sign > b._sign;
 
-            if (a.exponent != b.exponent)
-                return (a.exponent > b.exponent) ^ (a.sign == -1);
+            if (a._exponent != b._exponent)
+                return (a._exponent > b._exponent) ^ (a._sign == -1);
 
-            List<int> d1 = ListDeepCopy(a.digits);
-            List<int> d2 = ListDeepCopy(b.digits);
+            List<int> d1 = ListDeepCopy(a._digits);
+            List<int> d2 = ListDeepCopy(b._digits);
 
             int size = Math.Max(d1.Count, d2.Count);
 
@@ -349,7 +368,7 @@ namespace LongFloatLib
 
             for (int i = 0; i < size; i++)
                 if (d1[i] != d2[i])
-                    return (d1[i] > d2[i]) ^ (a.sign == -1);
+                    return (d1[i] > d2[i]) ^ (a._sign == -1);
 
             return false;
         }
@@ -361,17 +380,17 @@ namespace LongFloatLib
 
         public static bool operator ==(LongFloat a, LongFloat b)
         {
-            if (a.sign != b.sign)
+            if (a._sign != b._sign)
                 return false;
 
-            if (a.exponent != b.exponent)
+            if (a._exponent != b._exponent)
                 return false;
 
-            if (a.digits.Count != b.digits.Count)
+            if (a._digits.Count != b._digits.Count)
                 return false;
 
-            for (int i = 0; i < a.digits.Count; i++)
-                if (a.digits[i] != b.digits[i])
+            for (int i = 0; i < a._digits.Count; i++)
+                if (a._digits[i] != b._digits[i])
                     return false;
 
             return true;
@@ -392,20 +411,23 @@ namespace LongFloatLib
             return a < b || a == b;
         }
 
+        #endregion
+
         public override string ToString()
         {
+            var nf = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat;
             string result = string.Empty;
 
-            if (sign == -1)
+            if (_sign == -1)
                 result += "-";
 
-            if (exponent > 0)
+            if (_exponent > 0)
             {
                 int i = 0;
-                int exp = exponent;
+                int exp = _exponent;
 
-                while (i < digits.Count && i < exp)
-                    result += digits[i++];
+                while (i < _digits.Count && i < exp)
+                    result += _digits[i++];
 
                 while (i < exp)
                 {
@@ -413,30 +435,30 @@ namespace LongFloatLib
                     i++;
                 }
 
-                if (i < digits.Count)
+                if (i < _digits.Count)
                 {
-                    result += ",";
+                    result += nf.NumberDecimalSeparator[0];
 
-                    while (i < digits.Count)
-                        result += digits[i++];
+                    while (i < _digits.Count)
+                        result += _digits[i++];
                 }
             }
-            else if (exponent == 0)
+            else if (_exponent == 0)
             {
-                result += "0,";
+                result += "0" + nf.NumberDecimalSeparator[0];
 
-                for (int i = 0; i < digits.Count; i++)
-                    result += digits[i];
+                for (int i = 0; i < _digits.Count; i++)
+                    result += _digits[i];
             }
             else
             {
-                result += "0,";
+                result += "0" + nf.NumberDecimalSeparator[0];
 
-                for (int i = 0; i < -exponent; i++)
+                for (int i = 0; i < -_exponent; i++)
                     result += "0";
 
-                for (int i = 0; i < digits.Count; i++)
-                    result += digits[i];
+                for (int i = 0; i < _digits.Count; i++)
+                    result += _digits[i];
             }
 
             return result;
