@@ -48,13 +48,13 @@
             // 
             this.pictureBox1.Location = new System.Drawing.Point(12, 12);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(128, 128);
+            this.pictureBox1.Size = new System.Drawing.Size(320, 320);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
             // lblElapsedTime
             // 
-            this.lblElapsedTime.Location = new System.Drawing.Point(658, 157);
+            this.lblElapsedTime.Location = new System.Drawing.Point(338, 157);
             this.lblElapsedTime.Name = "lblElapsedTime";
             this.lblElapsedTime.Size = new System.Drawing.Size(206, 20);
             this.lblElapsedTime.TabIndex = 21;
@@ -69,7 +69,7 @@
             this.groupBox1.Controls.Add(this.btnRight);
             this.groupBox1.Controls.Add(this.btnDown);
             this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Location = new System.Drawing.Point(658, 12);
+            this.groupBox1.Location = new System.Drawing.Point(338, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(206, 142);
             this.groupBox1.TabIndex = 20;
@@ -146,7 +146,7 @@
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(658, 618);
+            this.btnClose.Location = new System.Drawing.Point(338, 298);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(206, 34);
             this.btnClose.TabIndex = 22;
@@ -158,7 +158,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(874, 661);
+            this.ClientSize = new System.Drawing.Size(549, 342);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.lblElapsedTime);
             this.Controls.Add(this.groupBox1);

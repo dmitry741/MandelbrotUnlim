@@ -20,10 +20,10 @@ namespace MandelbrotUnlim
         private byte[] _rgbValues = null;
         private Palette _colors = null;
 
-        const double _dxmin = -1.75;
-        const double _dxmax = 1.75;
-        const double _dymin = -1.75;
-        const double _ydmax = 1.75;
+        const double _dxmin = -1.7;
+        const double _dxmax = 1.7;
+        const double _dymin = -1.7;
+        const double _ydmax = 1.7;
 
         private LongFloat _xmin = LongFloat.FromDouble(_dxmin);
         private LongFloat _xmax = LongFloat.FromDouble(_dxmax);
@@ -90,7 +90,7 @@ namespace MandelbrotUnlim
         void UpdateFractal()
         {
             pictureBox1.Image = GetFractal();
-            lblElapsedTime.Text = string.Format("Время построения: {0} мс", _timeSpan);
+            lblElapsedTime.Text = string.Format("Время построения: {0} сек", _timeSpan);
         }
 
         #endregion

@@ -76,13 +76,13 @@ namespace MandelbrotUnlim
             {
                 Task.Run(() => FillArray(Xmin, Xmax, Ymin, Ymax, BitmapWidth, BitmapHeight, fractal.Copy(),
                      0,
-                     BitmapHeight - 1,
-                    rgbValues, colors, stride)
+                     BitmapHeight / 2,
+                    rgbValues, colors, stride)),
 
-                /*Task.Run(() => FillArray(Xmin, Xmax, Ymin, Ymax, BitmapWidth, BitmapHeight, fractal.Copy(),
+                Task.Run(() => FillArray(Xmin, Xmax, Ymin, Ymax, BitmapWidth, BitmapHeight, fractal.Copy(),
                     BitmapHeight / 2 + 1,
                     BitmapHeight - 1,
-                    rgbValues, colors, stride)*/)
+                    rgbValues, colors, stride))
             };
 
             Task.WaitAll(tasks.ToArray());
@@ -104,7 +104,7 @@ namespace MandelbrotUnlim
             GetPixels(fractal, colors, stride, rgbValues);
             stopWatch.Stop();
 
-            return stopWatch.Elapsed.Seconds * 1000 + stopWatch.Elapsed.Milliseconds;
+            return Convert.ToInt32(stopWatch.Elapsed.TotalSeconds);
         }
     }
 }

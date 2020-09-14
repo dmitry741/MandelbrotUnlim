@@ -14,20 +14,21 @@ namespace LongFloatLib
     {
         #region === members ===
 
-        int _sign;
-        List<int> _digits = new List<int>();
-        int _exponent;
+        public static int ValueDigits { get; set; } = 12;
+
+        private int _sign;
+        private List<int> _digits = new List<int>();
+        private int _exponent;
 
         #endregion
 
         #region === private ===
 
-        public void Truncate(int valueDigits)
+        private void Truncate()
         {
-            if (_digits.Count > valueDigits)
+            if (_digits.Count > ValueDigits)
             {
-                _digits.RemoveRange(valueDigits, _digits.Count - valueDigits);
-                RemoveZeroes();
+                _digits.RemoveRange(ValueDigits, _digits.Count - ValueDigits);
             }
         }
 
@@ -347,6 +348,11 @@ namespace LongFloatLib
             {
                 res._digits[i - 1] += res._digits[i] / 10;
                 res._digits[i] %= 10;
+            }
+
+            if (ValueDigits > 0)
+            {
+                res.Truncate();
             }
 
             res.RemoveZeroes();

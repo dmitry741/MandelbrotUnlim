@@ -71,6 +71,15 @@ namespace LongFloatTestApp
                 }
             }
 
+            // тест быстродействия
+            LongFloat c = LongFloat.FromDouble(0.22);
+            LongFloat z = LongFloat.FromDouble(0.02);
+
+            for (int i = 0; i < 10; i++)
+            {
+                z = z * z + c;
+            }
+
             stopWatch.Stop();
 
             // тесты завершены
