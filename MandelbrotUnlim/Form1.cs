@@ -20,10 +20,15 @@ namespace MandelbrotUnlim
         private byte[] _rgbValues = null;
         private Palette _colors = null;
 
-        private LongFloat _xmin = LongFloat.FromDouble(-1.75);
-        private LongFloat _xmax = LongFloat.FromDouble(1.75);
-        private LongFloat _ymin = LongFloat.FromDouble(-1.75);
-        private LongFloat _ymax = LongFloat.FromDouble(1.75);
+        const double _dxmin = -1.75;
+        const double _dxmax = 1.75;
+        const double _dymin = -1.75;
+        const double _ydmax = 1.75;
+
+        private LongFloat _xmin = LongFloat.FromDouble(_dxmin);
+        private LongFloat _xmax = LongFloat.FromDouble(_dxmax);
+        private LongFloat _ymin = LongFloat.FromDouble(_dymin);
+        private LongFloat _ymax = LongFloat.FromDouble(_ydmax);
 
         private int _timeSpan;
         AbstractDynamicFractal _fractal = new MandelbrotFractal();
@@ -123,10 +128,10 @@ namespace MandelbrotUnlim
 
         private void button1_Click(object sender, EventArgs e)
         {
-            _xmin = LongFloat.FromDouble(-1.75);
-            _xmax = LongFloat.FromDouble(1.75);
-            _ymin = LongFloat.FromDouble(-1.75);
-            _ymax = LongFloat.FromDouble(1.75);
+            _xmin = LongFloat.FromDouble(_dxmin);
+            _xmax = LongFloat.FromDouble(_dxmax);
+            _ymin = LongFloat.FromDouble(_dymin);
+            _ymax = LongFloat.FromDouble(_ydmax);
 
             UpdateFractal();
         }
