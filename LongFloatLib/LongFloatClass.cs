@@ -22,6 +22,15 @@ namespace LongFloatLib
 
         #region === private ===
 
+        public void Truncate(int valueDigits)
+        {
+            if (_digits.Count > valueDigits)
+            {
+                _digits.RemoveRange(valueDigits, _digits.Count - valueDigits);
+                RemoveZeroes();
+            }
+        }
+
         private bool IsZero => _digits.Count == 1 && _digits[0] == 0;
 
         private static List<int> ListDeepCopy(List<int> digits)
@@ -154,11 +163,13 @@ namespace LongFloatLib
         public LongFloat(string s)
         {
             InitFromString(s);
+            RemoveZeroes();
         }
 
         public LongFloat(double d)
         {
             InitFromString(d.ToString());
+            RemoveZeroes();
         }
 
         public static LongFloat FromString(string s)
