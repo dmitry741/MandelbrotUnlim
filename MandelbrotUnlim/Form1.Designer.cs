@@ -84,6 +84,7 @@
             this.btnZoomOut.TabIndex = 17;
             this.btnZoomOut.Text = "-";
             this.btnZoomOut.UseVisualStyleBackColor = true;
+            this.btnZoomOut.Click += new System.EventHandler(this.btnZoomOut_Click);
             // 
             // btnZoomIn
             // 
@@ -93,6 +94,7 @@
             this.btnZoomIn.TabIndex = 15;
             this.btnZoomIn.Text = "+";
             this.btnZoomIn.UseVisualStyleBackColor = true;
+            this.btnZoomIn.Click += new System.EventHandler(this.btnZoomIn_Click);
             // 
             // btnLeft
             // 
@@ -103,6 +105,7 @@
             this.btnLeft.Size = new System.Drawing.Size(36, 36);
             this.btnLeft.TabIndex = 5;
             this.btnLeft.UseVisualStyleBackColor = true;
+            this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
             // 
             // btnUp
             // 
@@ -113,6 +116,7 @@
             this.btnUp.Size = new System.Drawing.Size(36, 36);
             this.btnUp.TabIndex = 6;
             this.btnUp.UseVisualStyleBackColor = true;
+            this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
             // 
             // btnRight
             // 
@@ -123,6 +127,7 @@
             this.btnRight.Size = new System.Drawing.Size(36, 36);
             this.btnRight.TabIndex = 7;
             this.btnRight.UseVisualStyleBackColor = true;
+            this.btnRight.Click += new System.EventHandler(this.btnRight_Click);
             // 
             // btnDown
             // 
@@ -133,6 +138,7 @@
             this.btnDown.Size = new System.Drawing.Size(36, 36);
             this.btnDown.TabIndex = 8;
             this.btnDown.UseVisualStyleBackColor = true;
+            this.btnDown.Click += new System.EventHandler(this.btnDown_Click);
             // 
             // button1
             // 

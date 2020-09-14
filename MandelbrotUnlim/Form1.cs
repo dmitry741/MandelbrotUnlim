@@ -25,6 +25,9 @@ namespace MandelbrotUnlim
         const double _dymin = -1.7;
         const double _ydmax = 1.7;
 
+        private int _zoom = 0;
+        private readonly double cStep = 10;
+
         private LongFloat _xmin = LongFloat.FromDouble(_dxmin);
         private LongFloat _xmax = LongFloat.FromDouble(_dxmax);
         private LongFloat _ymin = LongFloat.FromDouble(_dymin);
@@ -132,6 +135,120 @@ namespace MandelbrotUnlim
             _xmax = LongFloat.FromDouble(_dxmax);
             _ymin = LongFloat.FromDouble(_dymin);
             _ymax = LongFloat.FromDouble(_ydmax);
+
+            UpdateFractal();
+        }
+
+        private void btnZoomIn_Click(object sender, EventArgs e)
+        {
+            if (_zoom >= 0)
+            {
+                LongFloat dx = (_xmax - _xmin) * LongFloat.FromDouble(1.0 / cStep);
+                LongFloat dy = (_ymax - _ymin) * LongFloat.FromDouble(1.0 / cStep);
+
+                _xmin += dx;
+                _xmax -= dx;
+                _ymin += dy;
+                _ymax -= dy;
+
+                _zoom++;
+            }
+            else
+            {
+                LongFloat csOne = LongFloat.FromDouble(cStep + 1);
+                LongFloat div = LongFloat.FromDouble(1.0 / (cStep + 2));
+
+                LongFloat xmax = (csOne * _xmax + _xmin) * div;
+                LongFloat xmin = (csOne * _xmin + _xmax) * div;
+                LongFloat ymax = (csOne * _ymax + _ymin) * div;
+                LongFloat ymin = (csOne * _ymin + _ymax) * div;
+
+                _xmin = xmin;
+                _xmax = xmax;
+                _ymin = ymin;
+                _ymax = ymax;
+
+                _zoom--;
+            }
+
+            UpdateFractal();
+        }
+
+        private void btnZoomOut_Click(object sender, EventArgs e)
+        {
+            if (_zoom <= 0)
+            {
+                LongFloat dx = (_xmax - _xmin) * LongFloat.FromDouble(1.0 / cStep);
+                LongFloat dy = (_ymax - _ymin) * LongFloat.FromDouble(1.0 / cStep);
+
+                _xmin -= dx;
+                _xmax += dx;
+                _ymin -= dy;
+                _ymax += dy;
+
+                _zoom--;
+            }
+            else
+            {
+                LongFloat csOne = LongFloat.FromDouble(cStep - 1);
+                LongFloat div = LongFloat.FromDouble(1.0 / (cStep - 2));
+
+                LongFloat xmax = (csOne * _xmax - _xmin) * div;
+                LongFloat xmin = (csOne * _xmin - _xmax) * div;
+                LongFloat ymax = (csOne * _ymax - _ymin) * div;
+                LongFloat ymin = (csOne * _ymin - _ymax) * div;
+
+                _xmin = xmin;
+                _xmax = xmax;
+                _ymin = ymin;
+                _ymax = ymax;
+
+                _zoom++;
+            }
+
+            UpdateFractal();
+        }
+
+        private void btnLeft_Click(object sender, EventArgs e)
+        {
+            LongFloat lfStep = LongFloat.FromDouble(1.0 / cStep);
+            LongFloat s = (_xmax - _xmin) * lfStep;
+
+            _xmax -= s;
+            _xmin -= s;
+
+            UpdateFractal();
+        }
+
+        private void btnUp_Click(object sender, EventArgs e)
+        {
+            LongFloat lfStep = LongFloat.FromDouble(1.0 / cStep);
+            LongFloat s = (_xmax - _xmin) * lfStep;
+
+            _ymax += s;
+            _ymin += s;
+
+            UpdateFractal();
+        }
+
+        private void btnDown_Click(object sender, EventArgs e)
+        {
+            LongFloat lfStep = LongFloat.FromDouble(1.0 / cStep);
+            LongFloat s = (_xmax - _xmin) * lfStep;
+
+            _ymax -= s;
+            _ymin -= s;
+
+            UpdateFractal();
+        }
+
+        private void btnRight_Click(object sender, EventArgs e)
+        {
+            LongFloat lfStep = LongFloat.FromDouble(1.0 / cStep);
+            LongFloat s = (_xmax - _xmin) * lfStep;
+
+            _xmax += s;
+            _xmin += s;
 
             UpdateFractal();
         }

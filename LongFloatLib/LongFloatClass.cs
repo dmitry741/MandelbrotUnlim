@@ -24,7 +24,7 @@ namespace LongFloatLib
 
         #region === private ===
 
-        private void Truncate()
+        public void Truncate()
         {
             if (_digits.Count > ValueDigits)
             {
@@ -340,8 +340,11 @@ namespace LongFloatLib
                 _digits = new List<int>(zeros)
             };
 
-            for (int i = 0; i < a._digits.Count; i++)
-                for (int j = 0; j < b._digits.Count; j++)
+            int na = a._digits.Count >= ValueDigits ? ValueDigits / 2 : a._digits.Count;
+            int nb = b._digits.Count >= ValueDigits ? ValueDigits / 2 : b._digits.Count;
+
+            for (int i = 0; i < na; i++)
+                for (int j = 0; j < nb; j++)
                     res._digits[i + j + 1] += a._digits[i] * b._digits[j];
 
             for (int i = len - 1; i > 0; i--)

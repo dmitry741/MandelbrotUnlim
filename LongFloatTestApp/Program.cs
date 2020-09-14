@@ -71,15 +71,6 @@ namespace LongFloatTestApp
                 }
             }
 
-            // тест быстродействия
-            LongFloat c = LongFloat.FromDouble(0.22);
-            LongFloat z = LongFloat.FromDouble(0.02);
-
-            for (int i = 0; i < 10; i++)
-            {
-                z = z * z + c;
-            }
-
             stopWatch.Stop();
 
             // тесты завершены
@@ -89,8 +80,7 @@ namespace LongFloatTestApp
             Console.WriteLine(string.Format("Failed: \t {0}", _failed));
             Console.WriteLine(string.Format("Time elapsed: \t {0} ms", stopWatch.Elapsed.Seconds * 1000 + stopWatch.Elapsed.Milliseconds));
             Console.WriteLine();
-            Console.WriteLine("Press ENTER to continue");
-            Console.ReadLine();
+            Console.WriteLine("Press ENTER to continue");            
         }
     }
 
@@ -100,6 +90,8 @@ namespace LongFloatTestApp
         {
             TestLongFloat testLongFloat = new TestLongFloat();
             testLongFloat.Run();
+
+            Console.ReadLine();
         }
     }
 }
